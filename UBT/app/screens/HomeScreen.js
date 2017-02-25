@@ -26,6 +26,7 @@ import {
 
 
 import PricesContainer from '../containers/PricesContainer';
+import NewsContainer from '../containers/NewsContainer';
 
 
 export default class HomeScreen extends Component {
@@ -43,7 +44,11 @@ export default class HomeScreen extends Component {
           <Body>
             <Title>Overview</Title>
           </Body>
-          <Right/>
+          <Right>
+            <Button transparent onPress={this.props.onOpenDrawer}>
+              <Icon name='add' />
+            </Button>
+          </Right>
         </Header>
 
         <Content>
@@ -51,6 +56,11 @@ export default class HomeScreen extends Component {
             <Text>Bitcoin Prices</Text>
           </ListItem>
           <PricesContainer navigator={this.props.navigator}/>
+
+          <ListItem itemDivider>
+            <Text>News</Text>
+          </ListItem>
+          <NewsContainer navigator={this.props.navigator}/>
         </Content>
 
       </Container>

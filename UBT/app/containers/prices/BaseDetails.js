@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import {
   AsyncStorage,
-  Slider
+  Slider,
+  BackAndroid
 } from 'react-native';
 
 import {
@@ -50,6 +51,14 @@ export default class BaseDetails extends Component {
     this.pickerItemLabel = 'key-currency-item-';
   }
 
+  componentWillMount() {
+    BackAndroid.addEventListener('hardwareBackPress', this.popNavigation.bind(this));
+  }
+
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.popNavigation.bind(this));
+  }
+
   async getCurrency(defaultCurrency='USD') {
     let currency = await AsyncStorage.getItem(this.currencyStorageKey);
     if (!currency) currency = defaultCurrency;
@@ -87,6 +96,7 @@ export default class BaseDetails extends Component {
 
   popNavigation() {
     this.props.navigator.pop();
+    return true;
   }
 
   async saveChanges() {

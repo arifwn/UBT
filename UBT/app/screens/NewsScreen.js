@@ -24,6 +24,7 @@ import {
   Body
 } from 'native-base';
 
+import NewsContainer from '../containers/NewsContainer';
 
 export default class NewsScreen extends Component {
   render() {
@@ -44,18 +45,9 @@ export default class NewsScreen extends Component {
         </Header>
 
         <Content>
-          <Text>
-            News
-          </Text>
+          <NewsContainer navigator={this.props.navigator}/>
         </Content>
 
-        <Footer>
-          <FooterTab>
-            <Button>
-              <Text>OK!</Text>
-            </Button>  
-          </FooterTab>
-        </Footer>
       </Container>
     );
   }

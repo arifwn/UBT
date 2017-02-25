@@ -20,6 +20,7 @@ import ConverterScreen from './screens/ConverterScreen';
 import AlertsScreen from './screens/AlertsScreen';
 import StatsScreen from './screens/StatsScreen';
 import SettingsScreen from './screens/SettingsScreen';
+import BrowserScreen from './screens/BrowserScreen';
 
 
 import CoinbaseDetails from './containers/prices/CoinbaseDetails';
@@ -66,6 +67,9 @@ export default class UBT extends Component {
         return (<CoinbaseDetails key="prices-coinbase-detail" navigator={this._navigator} {...route.props} />);
       case 'prices-coindesk-detail':
         return (<CoinDeskDetails key="prices-coindesk-detail" navigator={this._navigator} {...route.props} />);
+
+      case 'browser':
+        return (<BrowserScreen key="browser" navigator={this._navigator} {...route.props} />);
 
       default:
         return (<HomeScreen key="home-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} {...route.props} />);
