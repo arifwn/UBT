@@ -9,6 +9,7 @@ export default class CoinDeskPrice extends BasePrice {
   initConstants() {
     this.name = 'CoinDesk';
     this.currencyStorageKey = 'price-coindesk-currency';
+    this.refreshIntervalStorageKey = 'price-coindesk-refresh-interval';
     this.detailRouteId = 'prices-coindesk-detail';
   }
 

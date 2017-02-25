@@ -38,13 +38,17 @@ export default class BasePrice extends Component {
   initConstants() {
     this.name = 'Name';
     this.currencyStorageKey = 'price-key-currency';
+    this.refreshIntervalStorageKey = 'price-key-refresh-interval';
     this.detailRouteId = 'prices-key-detail';
   }
 
   componentWillMount() {
-    this.intervalId = setInterval(() => {
-      this.fetchExchangeRates();
-    }, 1*60*1000);
+    this.getInterval()
+      .then((interval) => {
+        this.intervalId = setInterval(() => {
+          this.fetchExchangeRates();
+        }, interval*1000);
+      })
   }
 
   componentWillUnmount() {
@@ -58,6 +62,17 @@ export default class BasePrice extends Component {
     let currency = await AsyncStorage.getItem(this.currencyStorageKey);
     if (!currency) currency = defaultCurrency;
     return currency;
+  }
+
+  async getInterval(defaultInterval=60) {
+    let interval = await AsyncStorage.getItem(this.refreshIntervalStorageKey);
+    if (interval) {
+      interval = JSON.parse(interval);
+    }
+    else {
+      interval = defaultInterval;
+    }
+    return interval;
   }
 
   async fetchExchangeRates() {

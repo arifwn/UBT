@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import {
   AsyncStorage,
+  Slider
 } from 'react-native';
 
 import {
@@ -26,6 +27,7 @@ export default class BaseDetails extends Component {
     super(props);
     this.state = {
       loading: true,
+      refreshInterval: 60,
       currency: null,
       currencies: []
     }
@@ -35,12 +37,16 @@ export default class BaseDetails extends Component {
     this.getCurrency()
       .then((currency) => this.setState({currency}));
 
+    this.getInterval()
+      .then((refreshInterval) => this.setState({refreshInterval}));
+
     this.fetchCurrencies();
   }
 
   initConstants() {
     this.name = 'Name';
     this.currencyStorageKey = 'price-key-currency';
+    this.refreshIntervalStorageKey = 'price-key-refresh-interval';
     this.pickerItemLabel = 'key-currency-item-';
   }
 
@@ -52,6 +58,21 @@ export default class BaseDetails extends Component {
 
   async setCurrency(currency) {
     let result = await AsyncStorage.setItem(this.currencyStorageKey, currency);
+  }
+
+  async getInterval(defaultInterval=60) {
+    let interval = await AsyncStorage.getItem(this.refreshIntervalStorageKey);
+    if (interval) {
+      interval = JSON.parse(interval);
+    }
+    else {
+      interval = defaultInterval;
+    }
+    return interval;
+  }
+
+  async setInterval(interval) {
+    let result = await AsyncStorage.setItem(this.refreshIntervalStorageKey, JSON.stringify(interval));
   }
 
   async fetchCurrencies() {
@@ -71,11 +92,16 @@ export default class BaseDetails extends Component {
   async saveChanges() {
     if (this.state.currency) {
       await this.setCurrency(this.state.currency);
+      await this.setInterval(this.state.refreshInterval);
     }
 
     if (this.props.onSave) this.props.onSave();
 
     this.props.navigator.pop();
+  }
+
+  onRefreshIntervalChange(refreshInterval) {
+    this.setState({refreshInterval});
   }
 
   render() {
@@ -113,6 +139,13 @@ export default class BaseDetails extends Component {
                 onValueChange={this.onValueChange.bind(this)}>
                 {this.state.currencies.map((currency) => <Item label={currency.name} value={currency.id} key={this.pickerItemLabel + currency.id} />)}
               </Picker>
+              </Body>
+          </ListItem>
+
+          <ListItem>
+            <Body>
+              <Text>Refresh Interval ({this.state.refreshInterval}s)</Text>
+              <Slider step={1} minimumValue={5} maximumValue={300} value={this.state.refreshInterval} onValueChange={this.onRefreshIntervalChange.bind(this)} />
             </Body>
           </ListItem>
         </Content>

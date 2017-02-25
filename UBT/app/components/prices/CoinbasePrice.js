@@ -9,6 +9,7 @@ export default class CoinbasePrice extends BasePrice {
   initConstants() {
     this.name = 'Coinbase';
     this.currencyStorageKey = 'price-coinbase-currency';
+    this.refreshIntervalStorageKey = 'price-coinbase-refresh-interval';
     this.detailRouteId = 'prices-coinbase-detail';
   }
 

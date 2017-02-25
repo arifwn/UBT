@@ -7,6 +7,7 @@ export default class CoinDeskDetails extends BaseDetails {
   initConstants() {
     this.name = 'Coinbase';
     this.currencyStorageKey = 'price-coinbase-currency';
+    this.refreshIntervalStorageKey = 'price-coinbase-refresh-interval';
     this.pickerItemLabel = 'coinbase-currency-item-';
   }
 
