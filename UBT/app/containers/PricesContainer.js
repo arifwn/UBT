@@ -3,32 +3,39 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  Text,
-  View
+  View,
+  WebView
 } from 'react-native';
 
+import CoinbasePrice from '../components/prices/CoinbasePrice';
+import CoinDeskPrice from '../components/prices/CoinDeskPrice';
+
+let chartHtml = require('../components/prices/chart.html');
+
 export default class PricesContainer extends Component {
+  onNavigationStateChange(navigator) {
+    if (navigator.url.includes('components/prices/chart.html')) {
+      return true;
+    }
+    else{
+      console.log(navigator.url);
+      this._webview.stopLoading();
+      return false;
+     }
+  }
+
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>
-          Prices Container
-        </Text>
+      <View>
+        <WebView
+          ref={(ref) => this._webview = ref}
+          source={chartHtml}
+          style={{alignSelf: 'stretch', height: 300}}
+          onNavigationStateChange ={this.onNavigationStateChange.bind(this)}
+        />
+        <CoinbasePrice navigator={this.props.navigator}/>
+        <CoinDeskPrice navigator={this.props.navigator}/>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  text: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  }
-});

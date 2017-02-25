@@ -25,6 +25,9 @@ import {
 } from 'native-base';
 
 
+import PricesContainer from '../containers/PricesContainer';
+
+
 export default class HomeScreen extends Component {
   render() {
     return (
@@ -44,18 +47,12 @@ export default class HomeScreen extends Component {
         </Header>
 
         <Content>
-          <Text>
-            Home
-          </Text>
+          <ListItem itemDivider>
+            <Text>Bitcoin Prices</Text>
+          </ListItem>
+          <PricesContainer navigator={this.props.navigator}/>
         </Content>
 
-        <Footer>
-          <FooterTab>
-            <Button>
-              <Text>OK!</Text>
-            </Button>  
-          </FooterTab>
-        </Footer>
       </Container>
     );
   }

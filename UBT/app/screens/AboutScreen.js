@@ -3,32 +3,60 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  Text,
   View
 } from 'react-native';
+
+import {
+  Container,
+  Header,
+  Title,
+  Content,
+  Footer,
+  FooterTab,
+  Button,
+  Icon,
+  List,
+  ListItem,
+  Text,
+  Thumbnail,
+  Left,
+  Right,
+  Body
+} from 'native-base';
+
 
 export default class AboutScreen extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>
-          About Screen
-        </Text>
-      </View>
+      <Container style={{
+        backgroundColor: '#FFF',
+      }}> 
+        <Header>
+          <Left>
+            <Button transparent onPress={this.props.onOpenDrawer}>
+                <Icon name='menu' />
+            </Button>
+          </Left>
+          <Body>
+            <Title>About</Title>
+          </Body>
+          <Right/>
+        </Header>
+
+        <Content>
+          <Text>
+            About
+          </Text>
+        </Content>
+
+        <Footer>
+          <FooterTab>
+            <Button>
+              <Text>OK!</Text>
+            </Button>  
+          </FooterTab>
+        </Footer>
+      </Container>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  text: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  }
-});

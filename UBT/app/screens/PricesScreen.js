@@ -24,6 +24,8 @@ import {
   Body
 } from 'native-base';
 
+import PricesContainer from '../containers/PricesContainer';
+
 
 export default class PricesScreen extends Component {
   render() {
@@ -44,18 +46,8 @@ export default class PricesScreen extends Component {
         </Header>
 
         <Content>
-          <Text>
-            Prices
-          </Text>
+          <PricesContainer navigator={this.props.navigator}/>
         </Content>
-
-        <Footer>
-          <FooterTab>
-            <Button>
-              <Text>OK!</Text>
-            </Button>  
-          </FooterTab>
-        </Footer>
       </Container>
     );
   }

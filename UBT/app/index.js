@@ -22,6 +22,10 @@ import StatsScreen from './screens/StatsScreen';
 import SettingsScreen from './screens/SettingsScreen';
 
 
+import CoinbaseDetails from './containers/prices/CoinbaseDetails';
+import CoinDeskDetails from './containers/prices/CoinDeskDetails';
+
+
 export default class UBT extends Component {
   constructor(props) {
     super(props);
@@ -42,23 +46,29 @@ export default class UBT extends Component {
   navigatorRenderScene(route, navigator) {
     switch (route.id) {
       case 'home':
-        return (<HomeScreen key="home-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} />);
+        return (<HomeScreen key="home-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} {...route.props} />);
       case 'prices':
-        return (<PricesScreen key="prices-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} />);
+        return (<PricesScreen key="prices-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} {...route.props} />);
       case 'news':
-        return (<NewsScreen key="news-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} />);
+        return (<NewsScreen key="news-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} {...route.props} />);
       case 'transactions':
-        return (<TransactionsScreen key="transactions-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} />);
+        return (<TransactionsScreen key="transactions-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} {...route.props} />);
       case 'converter':
-        return (<ConverterScreen key="converter-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} />);
+        return (<ConverterScreen key="converter-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} {...route.props} />);
       case 'alerts':
-        return (<AlertsScreen key="alerts-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} />);
+        return (<AlertsScreen key="alerts-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} {...route.props} />);
       case 'stats':
-        return (<StatsScreen key="stats-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} />);
+        return (<StatsScreen key="stats-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} {...route.props} />);
       case 'settings':
-        return (<SettingsScreen key="settings-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} />);
+        return (<SettingsScreen key="settings-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} {...route.props} />);
+
+      case 'prices-coinbase-detail':
+        return (<CoinbaseDetails key="prices-coinbase-detail" navigator={this._navigator} {...route.props} />);
+      case 'prices-coindesk-detail':
+        return (<CoinDeskDetails key="prices-coindesk-detail" navigator={this._navigator} {...route.props} />);
+
       default:
-        return (<HomeScreen key="home-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} />);
+        return (<HomeScreen key="home-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} {...route.props} />);
     }
   }
 
