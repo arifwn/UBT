@@ -1,8 +1,7 @@
 
 import React, { Component } from 'react';
 import {
-  AppRegistry,
-  StyleSheet,
+  AsyncStorage,
   View
 } from 'react-native';
 
@@ -30,15 +29,28 @@ export default class NewsContainer extends Component {
       ],
       articles: []
     }
-
   }
 
   componentWillMount() {
     this.refreshNews();
   }
 
+  async loadNewsConfig() {
+    let newsSourcesTxt = await AsyncStorage.getItem('news-sources-config');
+    let newsSources = [
+      {name: 'Cryptocoins News', url: 'https://www.cryptocoinsnews.com/feed/', limit: 5}
+    ];
+
+    if (newsSourcesTxt) newsSources = JSON.parse(newsSourcesTxt);
+
+    this.setState({newsSources});
+    return newsSources;
+  }
+
   async refreshNews() {
     if (this.props.loadingStatus) this.props.loadingStatus(true);
+
+    let newsSources = await this.loadNewsConfig();
 
     let articles = [];
     for (let i = 0; i < this.state.newsSources.length; i++) {

@@ -1,8 +1,7 @@
 
 import React, { Component } from 'react';
 import {
-  AppRegistry,
-  StyleSheet,
+  ActivityIndicator,
   View
 } from 'react-native';
 
@@ -28,6 +27,21 @@ import StatsContainer from '../containers/StatsContainer';
 
 
 export default class StatsScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true
+    }
+  }
+
+  loadingStatus(isLoading) {
+    this.setState({loading: isLoading});
+  }
+
+  reload() {
+    this._statsContainer.refreshStats();
+  }
+
   render() {
     return (
       <Container style={{
@@ -40,13 +54,24 @@ export default class StatsScreen extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>Stats</Title>
+            <Title>Statistics</Title>
           </Body>
-          <Right/>
+          <Right>
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+              <ActivityIndicator animating={this.state.loading} size="small" color="white" style={{ marginRight: 10 }} />
+              <Button light transparent onPress={this.reload.bind(this)}>
+                  <Icon name='refresh' />
+              </Button>
+            </View>
+          </Right>
         </Header>
 
         <Content>
-          <StatsContainer navigator={this.props.navigator}/>
+          <StatsContainer
+            ref={(statsContainer) => this._statsContainer = statsContainer}
+            navigator={this.props.navigator}
+            loadingStatus={this.loadingStatus.bind(this)}
+          />
         </Content>
       </Container>
     );
