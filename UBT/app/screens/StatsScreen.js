@@ -24,6 +24,8 @@ import {
   Body
 } from 'native-base';
 
+import StatsContainer from '../containers/StatsContainer';
+
 
 export default class StatsScreen extends Component {
   render() {
@@ -44,18 +46,8 @@ export default class StatsScreen extends Component {
         </Header>
 
         <Content>
-          <Text>
-            Stats
-          </Text>
+          <StatsContainer navigator={this.props.navigator}/>
         </Content>
-
-        <Footer>
-          <FooterTab>
-            <Button>
-              <Text>OK!</Text>
-            </Button>  
-          </FooterTab>
-        </Footer>
       </Container>
     );
   }

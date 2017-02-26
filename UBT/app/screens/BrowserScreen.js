@@ -4,7 +4,8 @@ import {
   WebView,
   View,
   Linking,
-  BackAndroid
+  BackAndroid,
+  ActivityIndicator
 } from 'react-native';
 
 import {
@@ -23,6 +24,12 @@ import {
 
 
 export default class BrowserScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true
+    }
+  }
 
   componentWillMount() {
     BackAndroid.addEventListener('hardwareBackPress', this.popNavigation.bind(this));
@@ -30,6 +37,10 @@ export default class BrowserScreen extends Component {
 
   componentWillUnmount() {
     BackAndroid.removeEventListener('hardwareBackPress', this.popNavigation.bind(this));
+  }
+
+  onNavigationStateChange(navState) {
+    this.setState({ loading: navState.loading });
   }
 
   popNavigation() {
@@ -52,7 +63,8 @@ export default class BrowserScreen extends Component {
           <WebView
             ref={(ref) => this._webview = ref}
             source={{uri: this.props.url}}
-            
+            startInLoadingState={true}
+            onNavigationStateChange={this.onNavigationStateChange.bind(this)}
             style={{flex: 1, height: 400}}
           />
         </View>
@@ -67,9 +79,12 @@ export default class BrowserScreen extends Component {
             <Title>{this.props.title}</Title>
           </Body>
           <Right>
-            <Button transparent onPress={this.openLink.bind(this)}>
-                <Icon name='open' />
-            </Button>
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+              <ActivityIndicator animating={this.state.loading} size="small" color="white" />
+              <Button light transparent onPress={this.openLink.bind(this)}>
+                  <Icon name='open' />
+              </Button>
+            </View>
           </Right>
         </Footer>
 

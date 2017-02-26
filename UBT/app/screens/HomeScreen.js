@@ -1,9 +1,8 @@
 
 import React, { Component } from 'react';
 import {
-  AppRegistry,
-  StyleSheet,
-  View
+  View,
+  ActivityIndicator
 } from 'react-native';
 
 import {
@@ -27,9 +26,26 @@ import {
 
 import PricesContainer from '../containers/PricesContainer';
 import NewsContainer from '../containers/NewsContainer';
+import StatsContainer from '../containers/StatsContainer';
 
 
 export default class HomeScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      newsLoading: true,
+      statsLoading: true
+    }
+  }
+
+  newsLoadingStatus(isLoading) {
+    this.setState({newsLoading: isLoading});
+  }
+
+  statsLoadingStatus(isLoading) {
+    this.setState({statsLoading: isLoading});
+  }
+
   render() {
     return (
       <Container style={{
@@ -53,14 +69,32 @@ export default class HomeScreen extends Component {
 
         <Content>
           <ListItem itemDivider>
-            <Text>Bitcoin Prices</Text>
+            <Body>
+              <Text>Bitcoin Prices</Text>
+            </Body>
+            <Right/>
           </ListItem>
           <PricesContainer navigator={this.props.navigator}/>
 
           <ListItem itemDivider>
-            <Text>News</Text>
+            <Body>
+              <Text>News</Text>
+            </Body>
+            <Right>
+              <ActivityIndicator animating={this.state.newsLoading} size="small" />
+            </Right>
           </ListItem>
-          <NewsContainer navigator={this.props.navigator}/>
+          <NewsContainer navigator={this.props.navigator} loadingStatus={this.newsLoadingStatus.bind(this)} />
+
+          <ListItem itemDivider>
+            <Body>
+              <Text>Stats</Text>
+            </Body>
+            <Right>
+              <ActivityIndicator animating={this.state.statsLoading} size="small" />
+            </Right>
+          </ListItem>
+          <StatsContainer navigator={this.props.navigator} loadingStatus={this.statsLoadingStatus.bind(this)}/>
         </Content>
 
       </Container>

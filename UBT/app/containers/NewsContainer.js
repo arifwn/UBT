@@ -31,11 +31,15 @@ export default class NewsContainer extends Component {
       articles: []
     }
 
+  }
 
+  componentWillMount() {
     this.refreshNews();
   }
 
   async refreshNews() {
+    if (this.props.loadingStatus) this.props.loadingStatus(true);
+
     let articles = [];
     for (let i = 0; i < this.state.newsSources.length; i++) {
       let source = this.state.newsSources[i];
@@ -44,7 +48,7 @@ export default class NewsContainer extends Component {
       this.setState({articles: articles});
     }
 
-    console.log(articles);
+    if (this.props.loadingStatus) this.props.loadingStatus(false);
     return articles;
   }
 
