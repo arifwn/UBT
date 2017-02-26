@@ -1,8 +1,6 @@
 
 import React, { Component } from 'react';
 import {
-  AppRegistry,
-  StyleSheet,
   View
 } from 'react-native';
 
@@ -28,6 +26,18 @@ import PricesContainer from '../containers/PricesContainer';
 
 
 export default class PricesScreen extends Component {
+
+  showSettings() {
+    this.props.navigator.push({
+      id: 'prices-config',
+      props: {
+        onSave: () => {
+          this._pricesContainer.loadConfig();
+        }
+      }
+    });
+  }
+
   render() {
     return (
       <Container style={{
@@ -42,11 +52,20 @@ export default class PricesScreen extends Component {
           <Body>
             <Title>Prices</Title>
           </Body>
-          <Right/>
+          <Right>
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+              <Button light transparent onPress={this.showSettings.bind(this)}>
+                  <Icon name='settings' />
+              </Button>
+            </View>
+          </Right>
         </Header>
 
         <Content>
-          <PricesContainer navigator={this.props.navigator}/>
+          <PricesContainer
+            ref={(pricesContainer) => { this._pricesContainer = pricesContainer }}
+            navigator={this.props.navigator}
+          />
         </Content>
       </Container>
     );

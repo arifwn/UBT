@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import {
   AsyncStorage,
+  InteractionManager
 } from 'react-native';
 
 import {
@@ -27,12 +28,6 @@ export default class BasePrice extends Component {
     }
 
     this.initConstants();
-
-    this.getCurrency()
-      .then((currency) => {
-        this.setState({currency});
-        this.fetchExchangeRates();
-      });
   }
 
   initConstants() {
@@ -43,12 +38,16 @@ export default class BasePrice extends Component {
   }
 
   componentWillMount() {
-    this.getInterval()
-      .then((interval) => {
-        this.intervalId = setInterval(() => {
+    InteractionManager.runAfterInteractions(() => {
+      this.initPeriodicFetch();
+
+      this.getCurrency()
+        .then((currency) => {
+          this.setState({currency});
           this.fetchExchangeRates();
-        }, interval*1000);
-      })
+        });
+    });
+
   }
 
   componentWillUnmount() {
@@ -56,6 +55,15 @@ export default class BasePrice extends Component {
       clearInterval(this.intervalId);
       this.intervalId = null;
     }
+  }
+
+  initPeriodicFetch() {
+    this.getInterval()
+      .then((interval) => {
+        this.intervalId = setInterval(() => {
+          this.fetchExchangeRates();
+        }, interval*1000);
+      })
   }
 
   async getCurrency(defaultCurrency='USD') {
@@ -76,6 +84,7 @@ export default class BasePrice extends Component {
   }
 
   async fetchExchangeRates() {
+    // override me
   }
 
   showDetails() {

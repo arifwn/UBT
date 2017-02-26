@@ -1,7 +1,8 @@
 
 import React, { Component } from 'react';
 import {
-  View
+  View,
+  InteractionManager
 } from 'react-native';
 
 import {
@@ -18,15 +19,14 @@ export default class StatsContainer extends Component {
     super(props);
 
     this.state = {
-      stats: [
-        {label: 'Test Item', value: 'Test Value'},
-        {label: 'Test Item', value: 'Test Value'}
-      ]
+      stats: []
     }
   }
 
   componentWillMount() {
-    this.refreshStats();
+    InteractionManager.runAfterInteractions(() => {
+      this.refreshStats();
+    });
   }
 
   async refreshStats() {

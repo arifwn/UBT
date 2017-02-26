@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import {
   AsyncStorage,
-  View
+  View,
+  InteractionManager
 } from 'react-native';
 
 import {
@@ -21,40 +22,59 @@ export default class NewsContainer extends Component {
     super(props);
     this.state = {
       newsSources: [
-        {name: 'Cryptocoins News', url: 'https://www.cryptocoinsnews.com/feed/', limit: 5},
-        // {name: 'CoinDesk', url: 'https://feeds.feedburner.com/CoinDesk', limit: 5},
-        // {name: 'Bitcoin Magazine', url: 'https://bitcoinmagazine.com/feed/', limit: 5},
-        // {name: '99Bitcoins', url: 'https://99bitcoins.com/feed/', limit: 5},
-        // {name: 'r/btc', url: 'https://www.reddit.com/r/btc/top/.rss', limit: 5, type: 'atom10'},
+        {name: '99Bitcoins', id: '99_bitcoins', url: 'https://99bitcoins.com/feed/', limit: 6},
+        {name: 'Bitcoin Magazine', id: 'bitcoin_magazine', url: 'https://bitcoinmagazine.com/feed/', limit: 6},
+        {name: 'CoinDesk', id: 'coindesk', url: 'https://feeds.feedburner.com/CoinDesk', limit: 6},
+        {name: 'Cryptocoins News', id: 'cryptocoins_news', url: 'https://www.cryptocoinsnews.com/feed/', limit: 6},
+        {name: 'r/bitcoin', id: 'r_bitcoin', url: 'https://www.reddit.com/r/bitcoin/top/.rss', limit: 6, type: 'atom10'},
+        {name: 'r/btc', id: 'r_btc', url: 'https://www.reddit.com/r/btc/top/.rss', limit: 6, type: 'atom10'},
       ],
+      enabledSources: {},
       articles: []
     }
   }
 
   componentWillMount() {
-    this.refreshNews();
+    InteractionManager.runAfterInteractions(() => {
+      this.refreshNews();
+    });
   }
 
   async loadNewsConfig() {
-    let newsSourcesTxt = await AsyncStorage.getItem('news-sources-config');
-    let newsSources = [
-      {name: 'Cryptocoins News', url: 'https://www.cryptocoinsnews.com/feed/', limit: 5}
-    ];
+    let enabledSourcesTxt = await AsyncStorage.getItem('enabled-news-sources');
+    let enabledSources = {
+      'cryptocoins_news': true
+    };
 
-    if (newsSourcesTxt) newsSources = JSON.parse(newsSourcesTxt);
+    if (enabledSourcesTxt) enabledSources = JSON.parse(enabledSourcesTxt);
 
-    this.setState({newsSources});
-    return newsSources;
+    this.setState({enabledSources});
+    return enabledSources;
+  }
+
+  enabledNewsSources() {
+    let sources = [];
+    for (let i = 0; i < this.state.newsSources.length; i++) {
+      let source = this.state.newsSources[i];
+      if (this.state.enabledSources[source.id]) {
+        sources.push(source)
+      }
+    }
+
+    return sources;
   }
 
   async refreshNews() {
     if (this.props.loadingStatus) this.props.loadingStatus(true);
 
-    let newsSources = await this.loadNewsConfig();
+    let config = await this.loadNewsConfig();
+    let newsSources = this.enabledNewsSources();
+
+    console.log(newsSources);
 
     let articles = [];
-    for (let i = 0; i < this.state.newsSources.length; i++) {
-      let source = this.state.newsSources[i];
+    for (let i = 0; i < newsSources.length; i++) {
+      let source = newsSources[i];
       let _articles = await this.fetchNews(source);
       articles = articles.concat(_articles);
       this.setState({articles: articles});

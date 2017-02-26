@@ -46,6 +46,28 @@ export default class HomeScreen extends Component {
     this.setState({statsLoading: isLoading});
   }
 
+  showPricesSettings() {
+    this.props.navigator.push({
+      id: 'prices-config',
+      props: {
+        onSave: () => {
+          this._pricesContainer.loadConfig();
+        }
+      }
+    });
+  }
+
+  showNewsSettings() {
+    this.props.navigator.push({
+      id: 'news-config',
+      props: {
+        onSave: () => {
+          this._newsContainer.refreshNews();
+        }
+      }
+    });
+  }
+
   render() {
     return (
       <Container style={{
@@ -61,9 +83,6 @@ export default class HomeScreen extends Component {
             <Title>Overview</Title>
           </Body>
           <Right>
-            <Button transparent onPress={this.props.onOpenDrawer}>
-              <Icon name='add' />
-            </Button>
           </Right>
         </Header>
 
@@ -72,19 +91,35 @@ export default class HomeScreen extends Component {
             <Body>
               <Text>Bitcoin Prices</Text>
             </Body>
-            <Right/>
+            <Right>
+              <Button transparent small onPress={this.showPricesSettings.bind(this)}>
+                <Icon name='settings' />
+              </Button>
+            </Right>
           </ListItem>
-          <PricesContainer navigator={this.props.navigator}/>
+          <PricesContainer
+            ref={(pricesContainer) => { this._pricesContainer = pricesContainer }}
+            navigator={this.props.navigator}
+          />
 
           <ListItem itemDivider>
             <Body>
               <Text>News</Text>
             </Body>
             <Right>
-              <ActivityIndicator animating={this.state.newsLoading} size="small" />
+              <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+                <ActivityIndicator animating={this.state.newsLoading} size="small" />
+                <Button small transparent onPress={this.showNewsSettings.bind(this)}>
+                    <Icon name='settings' />
+                </Button>
+              </View>
             </Right>
           </ListItem>
-          <NewsContainer navigator={this.props.navigator} loadingStatus={this.newsLoadingStatus.bind(this)} />
+          <NewsContainer
+            ref={(newsContainer) => { this._newsContainer = newsContainer }}
+            navigator={this.props.navigator}
+            loadingStatus={this.newsLoadingStatus.bind(this)}
+          />
 
           <ListItem itemDivider>
             <Body>

@@ -23,6 +23,7 @@ import SettingsScreen from './screens/SettingsScreen';
 import BrowserScreen from './screens/BrowserScreen';
 
 import NewsConfigScreen from './screens/NewsConfigScreen';
+import PricesConfigScreen from './screens/PricesConfigScreen';
 
 import CoinbaseDetails from './containers/prices/CoinbaseDetails';
 import CoinDeskDetails from './containers/prices/CoinDeskDetails';
@@ -74,6 +75,8 @@ export default class UBT extends Component {
 
       case 'news-config':
         return (<NewsConfigScreen key="news-config" navigator={this._navigator} {...route.props} />);
+      case 'prices-config':
+        return (<PricesConfigScreen key="prices-config" navigator={this._navigator} {...route.props} />);
 
       default:
         return (<HomeScreen key="home-screen" onOpenDrawer={this.openDrawer.bind(this)} navigator={this._navigator} {...route.props} />);

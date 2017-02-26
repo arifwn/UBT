@@ -5,7 +5,8 @@ import {
   ActivityIndicator,
   BackAndroid,
   View,
-  Switch
+  Switch,
+  InteractionManager
 } from 'react-native';
 
 import {
@@ -24,17 +25,13 @@ import {
 
 
 
-export default class NewsConfigScreen extends Component {
+export default class PricesConfigScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      newsSources: [
-        {name: '99Bitcoins', id: '99_bitcoins', url: 'https://99bitcoins.com/feed/', limit: 6},
-        {name: 'Bitcoin Magazine', id: 'bitcoin_magazine', url: 'https://bitcoinmagazine.com/feed/', limit: 6},
-        {name: 'CoinDesk', id: 'coindesk', url: 'https://feeds.feedburner.com/CoinDesk', limit: 6},
-        {name: 'Cryptocoins News', id: 'cryptocoins_news', url: 'https://www.cryptocoinsnews.com/feed/', limit: 6},
-        {name: 'r/bitcoin', id: 'r_bitcoin', url: 'https://www.reddit.com/r/bitcoin/top/.rss', limit: 6, type: 'atom10'},
-        {name: 'r/btc', id: 'r_btc', url: 'https://www.reddit.com/r/btc/top/.rss', limit: 6, type: 'atom10'},
+      pricesSources: [
+        {name: 'Coinbase', id: 'coinbase'},
+        {name: 'CoinDesk', id: 'coindesk'},
       ],
       enabledSources: {},
     }
@@ -43,7 +40,9 @@ export default class NewsConfigScreen extends Component {
   componentWillMount() {
     BackAndroid.addEventListener('hardwareBackPress', this.popNavigation.bind(this));
 
-    this.loadNewsConfig();
+    InteractionManager.runAfterInteractions(() => {
+      this.loadConfig();
+    });
   }
 
   componentWillUnmount() {
@@ -67,10 +66,10 @@ export default class NewsConfigScreen extends Component {
     this.setState({enabledSources});
   }
 
-  async loadNewsConfig() {
-    let enabledSourcesTxt = await AsyncStorage.getItem('enabled-news-sources');
+  async loadConfig() {
+    let enabledSourcesTxt = await AsyncStorage.getItem('enabled-prices-sources');
     let enabledSources = {
-      'cryptocoins_news': true
+      'coinbase': true
     };
 
     if (enabledSourcesTxt) enabledSources = JSON.parse(enabledSourcesTxt);
@@ -79,15 +78,15 @@ export default class NewsConfigScreen extends Component {
     return enabledSources;
   }
 
-  async saveNewsConfig() {
+  async saveConfig() {
     let enabledSourcesTxt = JSON.stringify(this.state.enabledSources);
-    let result = await AsyncStorage.setItem('enabled-news-sources', enabledSourcesTxt);
+    let result = await AsyncStorage.setItem('enabled-prices-sources', enabledSourcesTxt);
 
     return this.state.enabledSources;
   }
 
   onSave() {
-    this.saveNewsConfig()
+    this.saveConfig()
       .then(() => {
         this.props.navigator.pop();
         if (this.props.onSave) this.props.onSave();
@@ -113,7 +112,7 @@ export default class NewsConfigScreen extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>News Sources</Title>
+            <Title>Price Sources</Title>
           </Body>
           <Right>
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
@@ -125,9 +124,9 @@ export default class NewsConfigScreen extends Component {
         </Header>
 
         <Content>
-          {this.state.newsSources.map((source, i) => {
+          {this.state.pricesSources.map((source, i) => {
             return (
-              <ListItem key={'news-source-item-' + i}>
+              <ListItem key={'price-source-item-' + i}>
                 <Body>
                   <Text>
                     {source.name}
