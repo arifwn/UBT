@@ -25,6 +25,9 @@ import BrowserScreen from './screens/BrowserScreen';
 import NewsConfigScreen from './screens/NewsConfigScreen';
 import PricesConfigScreen from './screens/PricesConfigScreen';
 
+import ScannerScreen from './screens/ScannerScreen';
+import TransactionDetailScreen from './screens/TransactionDetailScreen';
+
 import CoinbaseDetails from './containers/prices/CoinbaseDetails';
 import CoinDeskDetails from './containers/prices/CoinDeskDetails';
 
@@ -72,6 +75,11 @@ export default class UBT extends Component {
 
       case 'browser':
         return (<BrowserScreen key="browser" navigator={this._navigator} {...route.props} />);
+
+      case 'scanner':
+        return (<ScannerScreen key="scanner" navigator={this._navigator} {...route.props} />);
+      case 'transaction-detail':
+        return (<TransactionDetailScreen key="transaction-detail" navigator={this._navigator} {...route.props} />);
 
       case 'news-config':
         return (<NewsConfigScreen key="news-config" navigator={this._navigator} {...route.props} />);

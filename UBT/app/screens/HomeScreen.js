@@ -92,7 +92,7 @@ export default class HomeScreen extends Component {
               <Text>Bitcoin Prices</Text>
             </Body>
             <Right>
-              <Button transparent small onPress={this.showPricesSettings.bind(this)}>
+              <Button transparent small dark onPress={this.showPricesSettings.bind(this)}>
                 <Icon name='settings' />
               </Button>
             </Right>
@@ -109,7 +109,7 @@ export default class HomeScreen extends Component {
             <Right>
               <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
                 <ActivityIndicator animating={this.state.newsLoading} size="small" />
-                <Button small transparent onPress={this.showNewsSettings.bind(this)}>
+                <Button transparent small dark onPress={this.showNewsSettings.bind(this)}>
                     <Icon name='settings' />
                 </Button>
               </View>

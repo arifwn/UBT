@@ -5,7 +5,8 @@ import {
   ActivityIndicator,
   BackAndroid,
   View,
-  Switch
+  Switch,
+  InteractionManager
 } from 'react-native';
 
 import {
@@ -43,7 +44,9 @@ export default class NewsConfigScreen extends Component {
   componentWillMount() {
     BackAndroid.addEventListener('hardwareBackPress', this.popNavigation.bind(this));
 
-    this.loadNewsConfig();
+    InteractionManager.runAfterInteractions(() => {
+      this.loadNewsConfig();
+    });
   }
 
   componentWillUnmount() {

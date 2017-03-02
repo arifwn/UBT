@@ -70,8 +70,6 @@ export default class NewsContainer extends Component {
     let config = await this.loadNewsConfig();
     let newsSources = this.enabledNewsSources();
 
-    console.log(newsSources);
-
     let articles = [];
     for (let i = 0; i < newsSources.length; i++) {
       let source = newsSources[i];
@@ -106,14 +104,12 @@ export default class NewsContainer extends Component {
     let pubDate = doc.getElementsByTagName('updated')[0];
     let description = doc.getElementsByTagName('content')[0];
 
-    console.log(link.getAttribute('href'));
-
     let article = {
       title: title.textContent,
       source: source.name,
       link: link.getAttribute('href'),
       pubDate: moment(pubDate.textContent).format('llll'),
-      description: description,
+      description: description.textContent,
     }
     return article;
   }
@@ -161,7 +157,6 @@ export default class NewsContainer extends Component {
   }
 
   openArticle(article) {
-    console.log(article)
     this.props.navigator.push({
       id: 'browser',
       props: {
@@ -182,8 +177,7 @@ export default class NewsContainer extends Component {
                       <Text>{article.title}</Text>
                       <Text note>{article.source} - {article.pubDate}</Text>
                     </Body>
-                  </ListItem>
-                  );
+                  </ListItem>);
         })}
       </View>
     );
