@@ -13,6 +13,8 @@ import {
   Body
 } from 'native-base';
 
+import moment from 'moment';
+
 
 export default class StatsContainer extends Component {
   constructor(props) {
@@ -74,6 +76,24 @@ export default class StatsContainer extends Component {
     return label;
   }
 
+  parseValue(key, value) {
+    switch (key) {
+      case 'timestamp':
+        return moment.unix(value/1000).format('llll');
+      case 'n_btc_mined':
+        return value / 100000000;
+      case 'total_fees_btc':
+        return value / 100000000;
+      case 'totalbc':
+        return value / 100000000;
+      case 'estimated_btc_sent':
+        return value / 100000000;
+      case 'total_btc_sent':
+        return value / 100000000;
+    }
+    return value;
+  }
+
   render() {
     return (
       <View>
@@ -81,7 +101,7 @@ export default class StatsContainer extends Component {
           return (<ListItem key={'stats-item-' + i} onPress={() => {}}>
                     <Body>
                       <Text>{statItem.label}</Text>
-                      <Text note>{statItem.value}</Text>
+                      <Text note>{this.parseValue(statItem.key, statItem.value)}</Text>
                     </Body>
                   </ListItem>
                   );
