@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   AsyncStorage,
   BackAndroid,
   InteractionManager,
@@ -46,7 +47,7 @@ export default class TransactionDetailScreen extends Component {
     BackAndroid.addEventListener('hardwareBackPress', this.popNavigation.bind(this));
 
     InteractionManager.runAfterInteractions(() => {
-      this.load();
+      this.reload();
     });
   }
 
@@ -56,6 +57,13 @@ export default class TransactionDetailScreen extends Component {
 
   popNavigation() {
     this.props.navigator.pop();
+
+    if (this.props.onClose) {
+      InteractionManager.runAfterInteractions(() => {
+        this.props.onClose();
+      });
+    }
+
     return true;
   }
 
@@ -97,9 +105,9 @@ export default class TransactionDetailScreen extends Component {
       let item = history[i];
       if (item.hash == newHistoryItem.hash) continue;
       newHistory.push(item);
+      if (i > 10) break;
     }
 
-    console.log('history:', newHistory);
     await AsyncStorage.setItem('transaction-history', JSON.stringify(newHistory));
   }
 
@@ -107,21 +115,21 @@ export default class TransactionDetailScreen extends Component {
     this.setState({loading: true});
 
     if (this.props.hashType == 'transaction') {
-      console.log('fetching ', this.props.hashType);
+      // console.log('fetching ', this.props.hashType);
       let data = await this.loadTransaction(this.props.hash);
       this.setState({data, loading: false});
       this.saveHistory(data);
       return data;
     }
     else if (this.props.hashType == 'address') {
-      console.log('fetching ', this.props.hashType);
+      // console.log('fetching ', this.props.hashType);
       let data = await this.loadAddress(this.props.hash);
       this.setState({data, loading: false});
       this.saveHistory(data);
       return data;
     }
     else {
-      console.log('unknown hash type!', this.props.hashType);
+      // console.log('unknown hash type!', this.props.hashType);
       let loaded = false;
       try {
         let data = await this.loadTransaction(this.props.hash);
@@ -130,7 +138,7 @@ export default class TransactionDetailScreen extends Component {
         return data;
       }
       catch (err) {
-        console.log('err', err);
+        // console.log('err', err);
       }
 
       try {
@@ -140,10 +148,10 @@ export default class TransactionDetailScreen extends Component {
         return data;
       }
       catch (err) {
-        console.log('err', err);
+        // console.log('err', err);
       }
 
-      throw new Error('invalid hash:', this.props.hash);
+      throw new Error('invalid hash: ' + this.props.hash);
     }
   }
 
@@ -162,8 +170,14 @@ export default class TransactionDetailScreen extends Component {
   }
 
   async reload() {
-    let result = await this.load();
-    return result;
+    try {
+      let result = await this.load();
+    }
+    catch (err) {
+      Alert.alert( 'Error', err.message );
+      this.setState({loading: false});
+    }
+    return;
   }
 
   renderItem(label, value, i) {
@@ -219,14 +233,14 @@ export default class TransactionDetailScreen extends Component {
     let viewData = [
       { label: "Hash 160", value: data['hash160'] },
       { label: "No. Transactions", value: data['n_tx'] },
-      { label: "Total Sent", value: data['total_sent'] / 100000000 },
-      { label: "Total Received", value: data['total_received'] / 100000000 },
-      { label: "Final Balance", value: data['final_balance'] / 100000000 },
+      { label: "Total Sent", value: (data['total_sent'] / 100000000) + ' BTC' },
+      { label: "Total Received", value: (data['total_received'] / 100000000) + ' BTC' },
+      { label: "Final Balance", value: (data['final_balance'] / 100000000) + ' BTC' },
     ];
 
     let views = [];
-    views.push(<ListItem key={'address-header-' + data.hash} itemDivider>
-                  <Text>Address {data.hash}</Text>
+    views.push(<ListItem key={'address-header-' + data.address} itemDivider>
+                  <Text>Address {data.address}</Text>
                 </ListItem>);
 
     let detailViews = viewData.map((item, i) => {

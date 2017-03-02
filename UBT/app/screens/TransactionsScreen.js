@@ -78,7 +78,10 @@ export default class TransactionsScreen extends Component {
         id: 'transaction-detail',
         props: {
           hash: this.state.hash,
-          hashType: 'unknown' // unknown, transaction, address
+          hashType: 'unknown', // unknown, transaction, address
+          onClose: () => {
+            this.loadHistory();
+          }
         }
       });
     });
